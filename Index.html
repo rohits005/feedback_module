@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+   <body>
+      <h2>Feedback Form</h2>
+      <form method="POST" action="#">
+         <label for="uname">User Name :</label><br>
+         <input type="text" id="unamedata" name="uname"><br>
+         <label for="feedback">Feedback :</label><br>
+         <textarea id="feedbackdata" name="feedback" rows="4" cols="50"></textarea><br>
+         <input type="submit" value="Submit">
+      </form>
+      <div>
+      <br><br><input type = "button" onclick = "getf()" value = "Get Feedbacks">
+      <br><br><label>Your input: </label>
+      <p><span id='display'></span></p>
+      <div>
+   </body>
+   <script>
+      $('form').on('submit', (e) => {
+      
+          const Uname = $('#unamedata').val().trim();
+          const Feedback = $('#feedbackdata').val().trim();
+      
+          const data = {
+              Uname,
+              Feedback
+          };
+          console.log('data',data );
+      
+          $.post('http://localhost:8080/post_feedback', data, function() {
+              console.log('Server recieved our data');
+          });
+      });
+   </script>
+   <script>
+      const getf = () => {
+      
+          const res = fetch('http://localhost:8080/get_feedback').then( response => response.json() )
+      .then( data => {console.log("data",data)
+      const srtdata = JSON.stringify(data)
+      console.log("srtdata",srtdata)
+      let parsed = "";
+      for (i = 0; i< srtdata.length; i++) {
+                    let resobj=  srtdata[i];
+                    for (let property in resobj) {
+                        parsed += property + ": " + resobj[property] + "\n";          
+                    }
+                }   
+      document.getElementById('display').innerHTML = parsed;} )
+      
+          // $.get('http://localhost:8080/get_feedback', function() {
+          //     console.log('Get Ca');
+          // });
+      };
+   </script>
+</html>
